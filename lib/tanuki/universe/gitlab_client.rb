@@ -17,7 +17,7 @@ module Tanuki
 
       def parse_options(options)
         @group = ENV['GITLAB_COOKBOOKS_GROUP'] || options['group']
-        @private_token = ENV['GITLAB_API_PRIVATETOKEN'] || options['private_token']
+        @private_token = ENV['GITLAB_API_PRIVATE_TOKEN'] || options['private_token']
         @url = ENV['GITLAB_API_ENDPOINT'] || options['url']
       end
       

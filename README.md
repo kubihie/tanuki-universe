@@ -53,7 +53,7 @@ Create config file. (Default is 'config.json')
 
 You can also use environment variables.
 - ENV['GITLAB_API_ENDPOINT']
-- ENV['GITLAB_API_PRIVATETOKEN']
+- ENV['GITLAB_API_PRIVATE_TOKEN']
 - ENV['GITLAB_COOKBOOKS_GROUP']
 
 Even then you need config file below.

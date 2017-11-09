@@ -56,7 +56,17 @@ You can also use environment variables.
 - ENV['GITLAB_API_PRIVATETOKEN']
 - ENV['GITLAB_COOKBOOKS_GROUP']
 
-In this case 'config.json' is unnecessary.
+```
+{
+  "endpoints": [
+    {
+      "type": "gitlab",
+      "options": {}
+    }
+  ]
+}
+```
+
 
 ```
 Commands:

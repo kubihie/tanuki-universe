@@ -4,6 +4,16 @@ Generate universe file from private Gitlab.
 
 Please see the following URL(https://docs.chef.io/api_chef_server.html#universe).
 
+## Caution(2017/11/09)⚠️
+
+Please add this to Gemfile.
+```
+gem 'gitlab', git: 'https://github.com/NARKOZ/gitlab.git'
+```
+It needs to be obtained from master branch to require fixes not included in the latest release.
+
+
+
 ## Installation
 
 Add this line to your application's Gemfile:

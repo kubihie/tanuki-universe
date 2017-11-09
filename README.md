@@ -56,6 +56,7 @@ You can also use environment variables.
 - ENV['GITLAB_API_PRIVATETOKEN']
 - ENV['GITLAB_COOKBOOKS_GROUP']
 
+Even then you need config file below.
 ```
 {
   "endpoints": [

@@ -23,36 +23,39 @@ module Tanuki
           universe = {}
 
           gitlab = Tanuki::Universe::GitlabClient.new(endpoint['options'])
-          gitlab.projects.auto_paginate do |project|
-            versions = {}
-
-            git_tags = gitlab.get_git_tags(project.id)
-            next if git_tags.count == 0
-
-            git_tags.each do |tag|
-              
-              begin
-              metadata = gitlab.get_metadata(project.id, tag.name)
-              rescue Exception => e
-                next if e.message == "undefined method `message' for {\"message\"=>\"404 File Not Found\"}:Hash"
-              end
+          groups = gitlab.get_groups
+          groups.each do |g|
+            group = gitlab.get_projects(g.id)
+            projects = group.projects
+            projects.each do |project|
+              versions = {}
           
-              parse_metadata(metadata)
-
-              dependencies_hash = Hash.new { |h,k| h[k] = {} }
-              if @dependencies.count == 0
-                dependencies_hash["dependencies"] = {}
+              git_tags = gitlab.get_git_tags(project['id'])
+              next if git_tags.count == 0
+          
+              git_tags.each do |tag|
+                begin
+                metadata = gitlab.get_metadata(project['id'], tag.name)
+                rescue Exception => e
+                  next if e.message == "undefined method `message' for {\"message\"=>\"404 File Not Found\"}:Hash"
+                end
+                parse_metadata(metadata)
+          
+                dependencies_hash = Hash.new { |h,k| h[k] = {} }
+                if @dependencies.count == 0
+                  dependencies_hash["dependencies"] = {}
+                end
+                @dependencies.each do |k, v|
+                  v = '>= 0.0.0' if v.empty?
+                  dependencies_hash["dependencies"] = dependencies_hash["dependencies"].update({k => v})
+                end
+                @location_path = project['web_url'] + '/repository/archive.tar.gz?ref=v' + @version
+          
+                versions = versions.update({ @version => { "location_path" => @location_path, "location_type" => endpoint['type'] }.update(dependencies_hash)})
               end
-              @dependencies.each do |k, v|
-                v = '>= 0.0.0' if v.empty?
-                dependencies_hash["dependencies"] = dependencies_hash["dependencies"].update({k => v})
-              end
-              @location_path = project.web_url + '/repository/archive.tar.gz?ref=v' + @version
-              
-              versions = versions.update({ @version => { "location_path" => @location_path, "location_type" => endpoint['type'] }.update(dependencies_hash)})
+              universe = universe.update({@cookbook_name => versions })
             end
-            universe = universe.update({@cookbook_name => versions })
-          end
+          end 
 
           json_str = JSON.pretty_generate(universe)
           puts json_str

@@ -1,8 +1,0 @@
-{
-  "endpoints": [
-    {
-      "type": "gitlab",
-      "options": {}
-    }
-  ]
-}
